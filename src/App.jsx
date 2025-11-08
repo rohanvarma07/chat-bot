@@ -21,7 +21,7 @@ function App() {
   const [darkMode, setDarkMode] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
   const [input, setInput] = React.useState("");
-  const [sidebarOpen, setSidebarOpen] = React.useState(false);
+  const [sidebarOpen, setSidebarOpen] = React.useState(window.innerWidth >= 768);
   const [chatSessions, setChatSessions] = React.useState([]);
   const [currentChatId, setCurrentChatId] = React.useState(null);
   const [isInitialized, setIsInitialized] = React.useState(false);
@@ -46,6 +46,41 @@ function App() {
   React.useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [currentChatId, chatSessions]);
+
+  // Keyboard shortcut for sidebar toggle (Ctrl/Cmd + B)
+  React.useEffect(() => {
+    const handleKeyDown = (event) => {
+      if ((event.ctrlKey || event.metaKey) && event.key === 'b') {
+        event.preventDefault();
+        setSidebarOpen(prev => !prev);
+      }
+      // ESC key to close sidebar on mobile
+      if (event.key === 'Escape' && sidebarOpen && window.innerWidth < 768) {
+        setSidebarOpen(false);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [sidebarOpen]);
+
+  // Handle window resize for responsive sidebar
+  React.useEffect(() => {
+    const handleResize = () => {
+      // On desktop (md+), ensure sidebar is open by default
+      if (window.innerWidth >= 768 && !sidebarOpen) {
+        setSidebarOpen(true);
+      }
+      // On mobile, close sidebar when switching from desktop
+      if (window.innerWidth < 768 && sidebarOpen) {
+        // Keep it open if user explicitly opened it on mobile
+        // This maintains user intent
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [sidebarOpen]);
 
   // Get current chat session
   const getCurrentChat = () => {
@@ -121,12 +156,18 @@ function App() {
     const newSession = createNewChatSession();
     setChatSessions(prevSessions => [newSession, ...prevSessions]);
     setCurrentChatId(newSession.id);
-    setSidebarOpen(false); // Close sidebar on mobile after creating new chat
+    // Only close sidebar on mobile after creating new chat
+    if (window.innerWidth < 768) {
+      setSidebarOpen(false);
+    }
   };
 
   const handleSelectChat = (chatId) => {
     setCurrentChatId(chatId);
-    setSidebarOpen(false); // Close sidebar on mobile after selecting chat
+    // Only close sidebar on mobile after selecting chat
+    if (window.innerWidth < 768) {
+      setSidebarOpen(false);
+    }
   };
 
   const handleDeleteChat = (chatId) => {
@@ -168,26 +209,27 @@ function App() {
   }
 
   return (
-    <div className={`flex h-screen transition-colors duration-300 ${
+    <div className={`h-screen transition-colors duration-300 ${
       darkMode ? 'bg-gray-900' : 'bg-gray-50'
     }`}>
-      {/* Sidebar */}
-      <Sidebar
-        darkMode={darkMode}
-        isOpen={sidebarOpen}
-        onToggle={toggleSidebar}
-        chatSessions={chatSessions}
-        currentChatId={currentChatId}
-        onNewChat={handleNewChat}
-        onSelectChat={handleSelectChat}
-        onDeleteChat={handleDeleteChat}
-        onRenameChat={handleRenameChat}
-      />
-      
-      {/* Main Chat Area */}
-      <div className={`flex flex-col flex-1 transition-all duration-300 ${
-        sidebarOpen ? 'md:ml-0' : 'md:ml-0'
-      }`}>
+      <div className="flex h-full relative">
+        {/* Sidebar */}
+        <Sidebar
+          darkMode={darkMode}
+          isOpen={sidebarOpen}
+          onToggle={toggleSidebar}
+          chatSessions={chatSessions}
+          currentChatId={currentChatId}
+          onNewChat={handleNewChat}
+          onSelectChat={handleSelectChat}
+          onDeleteChat={handleDeleteChat}
+          onRenameChat={handleRenameChat}
+        />
+        
+        {/* Main Chat Area */}
+        <div className={`flex flex-col transition-all duration-300 ease-in-out flex-1 ${
+          darkMode ? 'bg-gray-900' : 'bg-gray-50'
+        } relative overflow-hidden`}>
         <Header 
           toggleDarkMode={toggleDarkMode} 
           darkMode={darkMode} 
@@ -195,8 +237,16 @@ function App() {
           sidebarOpen={sidebarOpen}
         />
         
-        <div className='flex-1 overflow-y-auto overscroll-contain p-3 sm:p-4 md:p-6 pb-2'>
-          <div className='w-full max-w-none mx-auto space-y-3 sm:space-y-4'>
+        <div className={`flex-1 overflow-y-auto overscroll-contain transition-all duration-300 ${
+          sidebarOpen 
+            ? 'p-3 sm:p-4 lg:p-8 pb-2' 
+            : 'p-3 sm:p-4 lg:p-8 xl:p-12 pb-2'
+        }`}>
+          <div className={`w-full transition-all duration-300 mx-auto space-y-3 sm:space-y-4 ${
+            sidebarOpen 
+              ? 'max-w-4xl' 
+              : 'max-w-5xl xl:max-w-6xl'
+          }`}>
             {getCurrentMessages().map((message) => (
               <ChatMessages 
                 key={message.id} 
@@ -219,6 +269,7 @@ function App() {
           onSendMessage={handleSendMessage}
           loading={isLoading}
         />
+      </div>
       </div>
     </div>
   )

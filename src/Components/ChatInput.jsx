@@ -38,7 +38,7 @@ function ChatInput({ darkMode, input, setInput, onSendMessage, loading }) {
                     <button
                         type='submit'
                         disabled={!input.trim() || loading}
-                        className={`p-2.5 sm:p-3 rounded-full transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] min-w-[44px] ${
+                        className={`flex items-center justify-center p-2.5 sm:p-3 rounded-full transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] min-w-[44px] ${
                             darkMode
                                 ? 'bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white'
                                 : 'bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white'
