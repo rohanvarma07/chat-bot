@@ -26,6 +26,7 @@ function App() {
   const [currentChatId, setCurrentChatId] = React.useState(null);
   const [isInitialized, setIsInitialized] = React.useState(false);
   const messagesEndRef = React.useRef(null);
+  const abortControllerRef = React.useRef(null);
 
   // Load chat sessions on component mount
   React.useEffect(() => {
@@ -93,6 +94,14 @@ function App() {
     return currentChat?.messages || [];
   };
 
+  const handleStopGeneration = () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+      setIsLoading(false);
+    }
+  };
+
   const handleSendMessage = async () => {
     if (input.trim() && !isLoading && currentChatId) {
       const userMessage = {
@@ -117,37 +126,48 @@ function App() {
       setInput("");
       setIsLoading(true);
       
+      // Create abort controller for this request
+      abortControllerRef.current = new AbortController();
+      
       try {
-        // Call Gemini API
-        const aiResponseText = await geminiService.generateResponse(currentInput);
+        // Call Gemini API with abort signal
+        const aiResponseText = await geminiService.generateResponse(currentInput, abortControllerRef.current.signal);
         
-        const aiResponse = {
-          id: Date.now() + 1,
-          text: aiResponseText,
-          sender: "bot",
-          timestamp: new Date(),
-        };
-        
-        // Add AI response to current chat session
-        setChatSessions(prevSessions => 
-          addMessageToChat(prevSessions, currentChatId, aiResponse)
-        );
+        // Only add response if request wasn't aborted
+        if (!abortControllerRef.current.signal.aborted) {
+          const aiResponse = {
+            id: Date.now() + 1,
+            text: aiResponseText,
+            sender: "bot",
+            timestamp: new Date(),
+          };
+          
+          // Add AI response to current chat session
+          setChatSessions(prevSessions => 
+            addMessageToChat(prevSessions, currentChatId, aiResponse)
+          );
+        }
       } catch (error) {
-        console.error('Error getting AI response:', error);
-        
-        const errorResponse = {
-          id: Date.now() + 1,
-          text: "Sorry, I'm having trouble responding right now. Please try again later.",
-          sender: "bot",
-          timestamp: new Date(),
-        };
-        
-        // Add error response to current chat session
-        setChatSessions(prevSessions => 
-          addMessageToChat(prevSessions, currentChatId, errorResponse)
-        );
+        if (error.name === 'AbortError') {
+          console.log('Request was aborted');
+        } else {
+          console.error('Error getting AI response:', error);
+          
+          const errorResponse = {
+            id: Date.now() + 1,
+            text: "Sorry, I'm having trouble responding right now. Please try again later.",
+            sender: "bot",
+            timestamp: new Date(),
+          };
+          
+          // Add error response to current chat session
+          setChatSessions(prevSessions => 
+            addMessageToChat(prevSessions, currentChatId, errorResponse)
+          );
+        }
       } finally {
         setIsLoading(false);
+        abortControllerRef.current = null;
       }
     }
   };
@@ -267,6 +287,7 @@ function App() {
           input={input} 
           setInput={setInput} 
           onSendMessage={handleSendMessage}
+          onStopGeneration={handleStopGeneration}
           loading={isLoading}
         />
       </div>

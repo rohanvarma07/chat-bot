@@ -53,6 +53,38 @@ function ChatMessages({ darkMode, messages, formatTimestamp }) {
                     }`}>
                         {messages.text || messages.content || messages.message}
                     </div>
+                    
+                    {/* Copy Button */}
+                    <button
+                        onClick={handleCopy}
+                        className={`flex items-center justify-center p-2 mt-3 rounded-lg transition-all duration-300 hover:scale-105 active:scale-95 group ${
+                            copied ? 'copy-success' : ''
+                        } ${
+                            messages.sender === 'user'
+                                ? 'bg-white/10 hover:bg-white/20 text-white'
+                                : darkMode
+                                ? 'bg-gray-700/50 hover:bg-gray-600/50 text-gray-300 hover:text-white'
+                                : 'bg-gray-100/50 hover:bg-gray-200/50 text-gray-600 hover:text-gray-800'
+                        } shadow-lg hover:shadow-xl border ${
+                            messages.sender === 'user'
+                                ? 'border-white/20'
+                                : darkMode
+                                ? 'border-gray-600/30'
+                                : 'border-gray-300/30'
+                        }`}
+                    >
+                        {copied ? (
+                            <>
+                                <Check className="h-4 w-4 mr-1.5 text-green-400 transition-all duration-300" />
+                                <span className="text-xs font-medium text-green-400">Copied!</span>
+                            </>
+                        ) : (
+                            <>
+                                <Copy className="h-4 w-4 mr-1.5 transition-all duration-300 group-hover:scale-110" />
+                                <span className="text-xs font-medium">Copy</span>
+                            </>
+                        )}
+                    </button>
                 </div>
             </div>
         </div>

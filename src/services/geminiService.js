@@ -9,7 +9,7 @@ class GeminiService {
         }
     }
 
-    async generateResponse(message) {
+    async generateResponse(message, abortSignal) {
         if (!this.apiKey) {
             throw new Error('Gemini API key is not configured');
         }
@@ -36,7 +36,8 @@ class GeminiService {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(requestBody)
+                body: JSON.stringify(requestBody),
+                signal: abortSignal
             });
 
             if (!response.ok) {

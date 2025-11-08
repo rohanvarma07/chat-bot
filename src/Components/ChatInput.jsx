@@ -1,7 +1,7 @@
 import React from 'react'
-import { Send, Loader2 } from 'lucide-react'
+import { Send, Loader2, Square } from 'lucide-react'
 
-function ChatInput({ darkMode, input, setInput, onSendMessage, loading }) {
+function ChatInput({ darkMode, input, setInput, onSendMessage, loading, onStopGeneration }) {
     const handleSubmit = (e) => {
         e.preventDefault()
         if (input.trim() && !loading) {
@@ -35,23 +35,35 @@ function ChatInput({ darkMode, input, setInput, onSendMessage, loading }) {
                                 : 'bg-white/80 border-gray-300/50 text-gray-900 placeholder-gray-500 focus:border-indigo-400 focus:bg-white'
                         } rounded-full px-4 sm:px-5 py-3 text-base focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-transparent transition-all duration-500 ease-out backdrop-blur-sm shadow-lg focus:shadow-xl focus:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed`} 
                     />
-                    <button
-                        type='submit'
-                        disabled={!input.trim() || loading}
-                        className={`flex items-center justify-center p-2.5 sm:p-3 rounded-full transition-all duration-500 ease-out disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] min-w-[44px] group ${
-                            !input.trim() || loading
-                                ? 'bg-gradient-to-r from-gray-400 to-gray-500'
-                                : darkMode
-                                ? 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 shadow-lg hover:shadow-xl shimmer-effect'
-                                : 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 shadow-lg hover:shadow-xl shimmer-effect'
-                        } transform hover:scale-105 active:scale-95 disabled:hover:scale-100 disabled:hover:shadow-lg`}
-                    >
-                        {loading ? (
-                            <Loader2 className="h-5 w-5 sm:h-6 sm:w-6 animate-spin text-white" />
-                        ) : (
+                    
+                    {/* Send/Stop Button */}
+                    {loading ? (
+                        <button
+                            type='button'
+                            onClick={onStopGeneration}
+                            className={`flex items-center justify-center p-2.5 sm:p-3 rounded-full transition-all duration-500 ease-out min-h-[44px] min-w-[44px] group border-2 stop-button ${
+                                darkMode
+                                    ? 'bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-400 hover:to-orange-400 border-red-400 shadow-lg hover:shadow-xl'
+                                    : 'bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-400 hover:to-orange-400 border-red-400 shadow-lg hover:shadow-xl'
+                            } transform hover:scale-105 active:scale-95`}
+                        >
+                            <Square className="h-5 w-5 sm:h-6 sm:w-6 text-white transition-transform duration-300 group-hover:rotate-12" />
+                        </button>
+                    ) : (
+                        <button
+                            type='submit'
+                            disabled={!input.trim()}
+                            className={`flex items-center justify-center p-2.5 sm:p-3 rounded-full transition-all duration-500 ease-out disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] min-w-[44px] group border-2 ${
+                                !input.trim()
+                                    ? 'bg-gray-400 border-gray-300 text-gray-600'
+                                    : darkMode
+                                    ? 'bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-400 hover:to-blue-400 border-emerald-400 shadow-lg hover:shadow-xl'
+                                    : 'bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-400 hover:to-blue-400 border-emerald-400 shadow-lg hover:shadow-xl'
+                            } transform hover:scale-105 active:scale-95 disabled:hover:scale-100 disabled:hover:shadow-lg`}
+                        >
                             <Send className="h-5 w-5 sm:h-6 sm:w-6 text-white transition-transform duration-300 group-hover:translate-x-0.5" />
-                        )}
-                    </button>
+                        </button>
+                    )}
                 </form>
             </div>
         </div>

@@ -255,3 +255,34 @@ button:focus-visible {
     transform: scale(0.95);
   }
 }
+
+/* Copy button animations */
+@keyframes copySuccess {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.copy-success {
+  animation: copySuccess 0.3s ease-out;
+}
+
+/* Stop button pulse effect */
+@keyframes stopPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(239, 68, 68, 0);
+  }
+}
+
+.stop-button {
+  animation: stopPulse 2s infinite;
+}
