@@ -15,8 +15,8 @@ function ChatMessages({ darkMode, messages, formatTimestamp }) {
     };
 
     return (
-        <div className={`flex mb-6 px-2 md:px-3 ${messages.sender === "user" ? "justify-end" : "justify-start"}`}>
-            <div className={`flex rounded-2xl px-4 py-4 md:px-5 md:py-5 transition-all duration-300 hover:shadow-lg w-[40%] ${
+        <div className={`flex mb-4 sm:mb-6 px-2 sm:px-3 ${messages.sender === "user" ? "justify-end" : "justify-start"}`}>
+            <div className={`flex rounded-2xl px-3 py-3 sm:px-4 sm:py-4 md:px-5 md:py-5 transition-all duration-300 hover:shadow-lg max-w-[85%] sm:max-w-[75%] md:max-w-[65%] lg:max-w-[50%] ${
                 messages.sender === 'user'
                     ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg ml-auto'
                     : `mr-auto ${darkMode
@@ -25,26 +25,26 @@ function ChatMessages({ darkMode, messages, formatTimestamp }) {
                     }`
             }`}
             >
-                <div className={`flex-shrink-0 mr-3 mt-0.5 ${messages.sender === 'user' ? "text-indigo-200" : darkMode ? "text-indigo-400" : "text-indigo-600"}`}>
+                <div className={`flex-shrink-0 mr-2 sm:mr-3 mt-0.5 ${messages.sender === 'user' ? "text-indigo-200" : darkMode ? "text-indigo-400" : "text-indigo-600"}`}>
                     {messages.sender === 'user' ? 
-                        <User className="h-6 w-6 md:h-7 md:w-7" /> : 
-                        <Bot className="h-6 w-6 md:h-7 md:w-7" />
+                        <User className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7" /> : 
+                        <Bot className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7" />
                     }
                 </div>
                 <div className='flex-1 min-w-0'>
-                    <div className="mb-2 flex flex-col">
-                        <div className="flex justify-between items-center mb-1">
-                            <span className={`font-semibold text-sm md:text-base leading-tight ${messages.sender === 'user' ? 'text-indigo-100' : darkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+                    <div className="mb-1 sm:mb-2 flex flex-col">
+                        <div className="flex justify-between items-start mb-1">
+                            <span className={`font-semibold text-xs sm:text-sm md:text-base leading-tight ${messages.sender === 'user' ? 'text-indigo-100' : darkMode ? 'text-gray-200' : 'text-gray-700'}`}>
                                 {messages.sender === 'user' ? 'You' : 'AI Assistant'}
                             </span>
                             {messages.timestamp && formatTimestamp && (
-                                <span className={`text-xs md:text-sm font-medium flex-shrink-0 ${messages.sender === 'user' ? 'text-indigo-200/80' : darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                                <span className={`text-xs font-medium flex-shrink-0 ml-2 ${messages.sender === 'user' ? 'text-indigo-200/80' : darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                                     {formatTimestamp(messages.timestamp)}
                                 </span>
                             )}
                         </div>
                     </div>
-                    <div className={`text-sm md:text-base leading-relaxed break-words ${
+                    <div className={`text-sm sm:text-base leading-relaxed break-words whitespace-pre-wrap ${
                         messages.sender === 'user' 
                             ? 'text-white' 
                             : darkMode 

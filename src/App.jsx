@@ -9,7 +9,8 @@ import geminiService from './services/geminiService.js';
 function App() {
   const [darkMode, setDarkMode] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
-  const [input, setInput] = React.useState(""); 
+  const [input, setInput] = React.useState("");
+  const messagesEndRef = React.useRef(null); 
 
   const handleSendMessage = async () => {
     if (input.trim() && !isLoading) {
@@ -71,8 +72,8 @@ function App() {
       darkMode ? 'bg-gray-900' : 'bg-gray-50'
     }`}>
       <Header toggleDarkMode={toggleDarkMode} darkMode={darkMode} />
-      <div className='flex-1 overflow-y-auto p-4 md:p-6'>
-        <div className='w-full max-w-none mx-auto space-y-4'>
+      <div className='flex-1 overflow-y-auto overscroll-contain p-3 sm:p-4 md:p-6 pb-2'>
+        <div className='w-full max-w-none mx-auto space-y-3 sm:space-y-4'>
           {messages.map((message) => (
             <ChatMessages 
               key={message.id} 
@@ -84,6 +85,7 @@ function App() {
           {isLoading && (
             <LoadingIndicator darkMode={darkMode} />
           )}
+          <div ref={messagesEndRef} />
         </div>
       </div>
       <ChatInput 
