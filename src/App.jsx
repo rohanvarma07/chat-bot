@@ -227,9 +227,9 @@ function App() {
         />
         
         {/* Main Chat Area */}
-        <div className={`flex flex-col transition-all duration-300 ease-in-out flex-1 ${
+        <div className={`flex flex-col transition-all duration-500 ease-out flex-1 ${
           darkMode ? 'bg-gray-900' : 'bg-gray-50'
-        } relative overflow-hidden`}>
+        } relative overflow-hidden ${sidebarOpen ? 'transform scale-95 sm:scale-100' : 'transform scale-100'}`}>
         <Header 
           toggleDarkMode={toggleDarkMode} 
           darkMode={darkMode} 
@@ -237,9 +237,9 @@ function App() {
           sidebarOpen={sidebarOpen}
         />
         
-        <div className={`flex-1 overflow-y-auto overscroll-contain transition-all duration-300 ${
+        <div className={`flex-1 overflow-y-auto overscroll-contain transition-all duration-500 ease-out ${
           sidebarOpen 
-            ? 'p-3 sm:p-4 lg:p-8 pb-2' 
+            ? 'p-2 sm:p-3 md:p-4 lg:p-8 pb-2' 
             : 'p-3 sm:p-4 lg:p-8 xl:p-12 pb-2'
         }`}>
           <div className={`w-full transition-all duration-300 mx-auto space-y-3 sm:space-y-4 ${

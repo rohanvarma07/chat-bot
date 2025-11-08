@@ -42,26 +42,18 @@ function Sidebar({
 
     return (
         <>
-            {/* Mobile Overlay */}
-            {isOpen && (
-                <div 
-                    className="md:hidden fixed inset-0 bg-black/60 z-30 backdrop-blur-sm animate-in fade-in duration-300"
-                    onClick={onToggle}
-                />
-            )}
-
             {/* Sidebar */}
             <div className={`
-                transition-all duration-300 ease-in-out h-full flex flex-col relative
+                transition-all duration-500 ease-out h-full flex flex-col relative
                 ${isOpen 
-                    ? 'w-72 sm:w-80 opacity-100 translate-x-0' 
-                    : 'w-0 opacity-0 overflow-hidden md:opacity-100 md:translate-x-0'
+                    ? 'w-72 sm:w-80 opacity-100 translate-x-0 scale-100' 
+                    : 'w-0 opacity-0 overflow-hidden md:opacity-100 md:translate-x-0 scale-95 md:scale-100'
                 }
                 ${darkMode 
-                    ? 'bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 border-gray-700/50' 
-                    : 'bg-gradient-to-b from-white via-gray-50 to-white border-gray-200/50'
+                    ? 'bg-gradient-to-br from-gray-900/95 via-gray-800/90 to-gray-900/95 border-gray-700/30' 
+                    : 'bg-gradient-to-br from-white/95 via-gray-50/90 to-white/95 border-gray-200/30'
                 }
-                border-r backdrop-blur-xl shadow-2xl
+                border-r md:backdrop-blur-2xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)] md:shadow-[0_35px_60px_-12px_rgba(0,0,0,0.3)]
             `}>
                 {/* Header Section */}
                 <div className={`p-5 border-b ${darkMode ? 'border-gray-700/50' : 'border-gray-200/50'}`}>
