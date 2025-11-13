@@ -229,7 +229,7 @@ function App() {
   }
 
   return (
-    <div className={`h-screen transition-colors duration-300 ${
+    <div className={`h-screen transition-colors duration-300 app-entrance ${
       darkMode ? 'bg-gray-900' : 'bg-gray-50'
     }`}>
       <div className="flex h-full relative">
